@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.niao.dao.StudentMapper">
+    <!--
+    ==================================按照查询嵌套处理=====================================
+    思路：
+    ①先查询出所有的学生
+    ②根据学生的tid查询出对应tid的老师
+    这一段我们先从最基础的简单查询开始
+   但是却发现查询出来的teacher属性为null
+    这其实讲白了问题还是回归到属性名和字段名不一致的问题上
+    所以我们就想到了要用结果集映射-->
+    <select id="getStudent" resultMap="StudentTeacher">
+    select  * from mybatis.student
+    </select>
+<!--这一段是假设我们在老师的接口中定义了一句根据学生的tid查询返回对应老师-->
+    <select id="getTeacher" resultType="teacher">
+        select * from mybatis.teacher where id =#{tid}
+    </select>
+    <!--为了让这两个接口中的方法连接起来，需要使用结果集映射，对Student结果做一些手脚-->
+    <resultMap id="StudentTeacher" type="student">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+      <!--接下来就是教师这个复杂的属性了，复杂属性需要单独处理-->
+        <!--对象：association 集合：collection-->
+        <association property="teacher" column="tid" javaType="teacher" select="getTeacher"/>
+    </resultMap>
+
+    <!--
+ ==================================按照结果嵌套处理=====================================
+-->
+    <select id="getStudent2" resultMap="StudentTeacher2">
+                /*我这边就是要用联表查询*/
+        select  s.id sid,s.name sname,t.name tname,t.id tid
+        from mybatis.student s,mybatis.teacher t
+        where  s.tid=t.id
+    </select>
+    <resultMap id="StudentTeacher2" type="student">
+        <!--因为我们在sql语句中使用上了别名，所以在映射的时候也要写上别名-->
+        <result property="id" column="sid"/>
+        <result property="name" column="sname"/>
+        <!--接下来就是教师这个复杂的属性了，复杂属性需要单独处理对象：association 集合：collection-->
+        <!--下面这一行表示student对象中teacher这一属性对应的结果就是java的teacher类！-->
+        <association property="teacher" javaType="teacher" >
+            <!--其中teacher类的name属性对应我们查询结果中的别名tname-->
+            <result property="id" column="tid"/>
+            <result property="name" column="tname"/>
+        </association>
+    </resultMap>
+</mapper>

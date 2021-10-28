@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace绑定一个对应的Dao/Mapper接口-->
+<mapper namespace="com.com.niao.dao.UserMapper">
+    <!--select表示这个是查询语句，id属性表示dao/mapper中的方法名-->
+    <!--resultType表示返回的结果（单个）ResultMap表示返回的结果（多个）-->
+    <!--其实以后学习框架，框架配置文件的标签学习就是一个套路：按下空格看属性，学习标签属性-->
+    <!--返回的结果针对集合，返回的不是集合类型，而是集合里面元素（泛型）的类型-->
+    <select id="getUserList" resultType="user">
+     select * from mybatis.user
+    </select>
+<!--    <select id="queryUserById" parameterType="int" resultType="User">-->
+<!--        select * from mybatis.user where id=#{id}-->
+<!--    </select>-->
+<!--    <insert id="addUser" parameterType="User">-->
+<!--        insert into mybatis.user(id, name, pwd) values (#{id},#{name},#{pwd})-->
+<!--    </insert>-->
+<!--    <update id="updateUser" parameterType="User">-->
+<!--        update mybatis.user set name=#{name},pwd=#{pwd} where id=#{id}-->
+<!--    </update>-->
+<!--    <delete id="deleteUser" parameterType="int">-->
+<!--        delete from mybatis.user where id=${id}-->
+<!--    </delete>-->
+</mapper>

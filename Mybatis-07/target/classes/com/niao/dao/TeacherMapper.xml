@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.niao.dao.TeacherMapper">
+    <select id="getAllTeachers" resultType="teacher">
+        select *
+        from mybatis.teacher
+    </select>
+    <select id="getTeacherById" resultMap="TeacherStudent">
+        select t.id tid, t.name tname, s.id sid, s.name sname
+        from mybatis.teacher t,
+             mybatis.student s
+        where s.tid = t.id
+          and t.id = #{tid}
+    </select>
+    <resultMap id="TeacherStudent" type="teacher">
+        <result property="id" column="tid"/>
+        <result property="name" column="tname"/>
+        <!--接下来就是教师这个复杂的属性了，复杂属性需要单独处理对象：association 集合：collection-->
+        <!--javaType在这里是指students属性的类型，是ArrayList-->
+        <!--集合中泛型的类型要用ofType-->
+        <collection property="students" ofType="student">
+            <result property="id" column="sid"/>
+            <result property="name" column="sname"/>
+            <result property="tid" column="tid"/>
+        </collection>
+    </resultMap>
+</mapper>

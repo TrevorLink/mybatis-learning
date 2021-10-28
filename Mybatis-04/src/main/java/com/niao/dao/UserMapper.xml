@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace绑定一个对应的Dao/Mapper接口-->
+<mapper namespace="com.com.niao.dao.UserMapper">
+    <!--结果集映射,id表示这个映射的名字，type表示要映射的结果是哪一类-->
+    <resultMap id="UserMap" type="User">
+        <!--property指向的是Javabean的实体类中的属性-->
+        <!--column指向的是数据库中的每一列（字段）-->
+        <result property="password" column="pwd"/>
+    </resultMap>
+    <select id="queryUserById" parameterType="int" resultMap="UserMap">
+        select *
+        from mybatis.user
+        where id = #{id}
+    </select>
+    <select id="queryUserByLimit" parameterType="map" resultMap="UserMap">
+        select *
+        from mybatis.user
+        limit #{startIndex},#{pageSize}
+    </select>
+    <select id="queryUserByRowBounds" resultMap="UserMap">
+        select * from mybatis.user
+    </select>
+</mapper>
